@@ -661,6 +661,59 @@ run() {
 	hook post-run
 }
 
+# Smart implicit -f for `nook <repo> add ...`.
+#
+# nook's fallback ignore file is a single `*`, so every deliberate `add` of a
+# path would otherwise need `-f`. This transparently supplies it -- but ONLY
+# when the catch-all `*` is the sole thing in the way. If any named pathspec
+# is matched by a more specific pattern (a hand-written rule in a per-repo
+# .gitignore, .git/info/exclude, ...) we stay out of the way and let git's
+# normal "use -f" refusal happen, so a deliberate ignore is never bypassed.
+#
+# Also skipped for bulk forms (. -A --all -u --update -n --dry-run ...), when
+# -f/--force is already present, or when NOOK_ADD_FORCE=no. $@ is the git
+# words starting with "add"; GIT_DIR must already be exported. Prints nothing;
+# returns 0 if `-f` should be injected.
+auto_add_force() {
+	[ x"${NOOK_ADD_FORCE:-}" = x'no' ] && return 1
+	# shellcheck disable=SC2039,SC3043
+	local a ddash forced skip blanket deliberate pat
+	ddash=0; forced=0; skip=0; blanket=0; deliberate=0
+	for a in "$@"; do
+		[ "$ddash" = 1 ] && continue
+		case $a in
+			add) ;;
+			--) ddash=1 ;;
+			.|-A|--all|--no-ignore-removal|-u|--update|-n|--dry-run|--refresh|--pathspec-from-file|--pathspec-from-file=*|--pathspec-file-nul|-i|--interactive)
+				skip=1 ;;
+			-f|--force) forced=1 ;;
+			--*) ;;
+			-*) case $a in *f*) forced=1 ;; esac ;;
+			*) ;;
+		esac
+	done
+	{ [ "$skip" = 1 ] || [ "$forced" = 1 ]; } && return 1
+	ddash=0
+	for a in "$@"; do
+		[ x"$a" = x'add' ] && continue
+		if [ "$ddash" = 0 ]; then
+			case $a in
+				--) ddash=1; continue ;;
+				-*) continue ;;
+			esac
+		fi
+		# `check-ignore -v` prints the last matching line even when it is a
+		# negation (path NOT ignored), so treat a leading '!' as "not ignored".
+		pat=$(printf '%s\0' "$a" | @GIT@ check-ignore -v -z --stdin 2> /dev/null | tr '\0' '\n' | @SED@ -n '3p')
+		case $pat in
+			''|'!'*) ;;
+			'*') blanket=1 ;;
+			*) deliberate=1 ;;
+		esac
+	done
+	[ "$deliberate" = 0 ] && [ "$blanket" = 1 ]
+}
+
 status() {
 	if [ -t 1 ]; then
 		COLORING="-c color.status=always"
@@ -937,6 +990,10 @@ elif [ -n "$2" ]; then
 	GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
 	[ -d "$GIT_DIR" ] || { help; exit 1; }
 	shift 1
+	if [ x"$1" = x'add' ] && auto_add_force "$@"; then
+		shift                     # drop "add"
+		set -- add -f "$@"        # ...and put it back with -f
+	fi
 	set -- "@GIT@" "$@"
 elif [ -n "$NOOK_COMMAND" ]; then
 	NOOK_COMMAND='enter'; export NOOK_COMMAND

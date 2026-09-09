@@ -45,6 +45,12 @@
 	* New: `nook config <git config args>` edits a shared git config file
 	  ($NOOK_GITCONFIG) that every repo includes via include.path;
 	  set credential.helper, user.email, etc. once for all repos
+	* `nook <repo> add <path>` now supplies `-f` automatically when the only
+	  thing ignoring the named paths is nook's catch-all `*`. A path matched
+	  by a real rule (a per-repo .gitignore line, .git/info/exclude, ...) is
+	  NOT force-added -- git's "use -f" refusal still guards a deliberate
+	  ignore. Skipped for bulk forms (. -A -u -n --dry-run ...), an explicit
+	  -f, and $NOOK_ADD_FORCE=no. Uses `git check-ignore -v` to classify.
 	* upgrade now sets status.showUntrackedFiles (default no, override with
 	  $NOOK_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,

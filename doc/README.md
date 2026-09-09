@@ -171,6 +171,16 @@ otherwise to the shared `~/.config/nook/.gitignore` /
 files are **not** tracked by the repo and do not clone to other machines --
 regenerate with `nook write-gitignore <repo>` if you want a per-repo one.
 
+The shared `~/.config/nook/.gitignore` is seeded with a single `*`, so
+`git add .` in a nook repo can't sweep up all of `$HOME`. To spare you a
+`-f` on every deliberate add, `nook <repo> add <path>` supplies `-f`
+automatically **when that catch-all `*` is the only thing in the way**. A
+path matched by a real rule (a line you wrote in `<name>.nook/.gitignore`,
+`.git/info/exclude`, ...) is **not** force-added -- git's normal "use -f"
+refusal still stands, so a deliberate ignore is never bypassed. The implicit
+`-f` is skipped for bulk forms (`nook <repo> add .` / `-A` / `-u` / `-n`
+...), when you pass `-f` yourself, and when `NOOK_ADD_FORCE=no`.
+
 `nook` refuses to overwrite an existing file: if a checkout would clobber
 something already in `$HOME`, it warns and exits. Move the old file aside and
 retry, then merge and `nook <name> push`.

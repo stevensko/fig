@@ -277,12 +277,28 @@ and so on -- via the `config` command. `upgrade` also sets
 `status.showUntrackedFiles` in each repo (see <$NOOK_SHOW_UNTRACKED>) and
 `core.excludesfile` / `core.attributesfile` (see <$NOOK_GITIGNORE_FILE>).
 
+Because the shared fallback ignore file is a single `*` (so `git add .` in a
+nook repo does not vacuum up all of `$HOME`), `nook <repo> add <path> ...`
+supplies `-f` for you when the catch-all `*` is the only thing ignoring the
+named paths. If any path is matched by a more specific pattern -- a
+hand-written rule in a <repo>.nook/.gitignore, `.git/info/exclude`, etc. --
+`nook` does not force, so git's normal "use -f" refusal still protects a
+deliberate ignore. The implicit `-f` is also skipped for bulk forms (`.`,
+`-A`, `--all`, `-u`, `--update`, `-n`, `--dry-run`, ...), when you pass
+`-f`/`--force` yourself, and when <$NOOK_ADD_FORCE> is <no>.
+
 Interesting knobs you can turn:
 
 * <$NOOK_GITCONFIG>:
   Path of the shared git config file included by every repository.
 
   Defaults to <$XDG_CONFIG_HOME/nook/.gitconfig>.
+
+* <$NOOK_ADD_FORCE>:
+  Set to <no> to disable the implicit `-f` on `nook <repo> add` described
+  above, so `add` behaves exactly like `git add`.
+
+  Defaults to unset (implicit `-f` enabled).
 
 * <$NOOK_GITIGNORE_FILE>, <$NOOK_GITATTRIBUTES_FILE>:
   Shared fallback ignore / attributes files, used by a repo when it has no
