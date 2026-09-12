@@ -51,6 +51,9 @@
 	  NOT force-added -- git's "use -f" refusal still guards a deliberate
 	  ignore. Skipped for bulk forms (. -A -u -n --dry-run ...), an explicit
 	  -f, and $NOOK_ADD_FORCE=no. Uses `git check-ignore -v` to classify.
+	* commit/pull/push: the blank line between repos is now printed BETWEEN
+	  iterations instead of after every one, so a single-repo run (or the
+	  last repo in a multi-repo run) has no trailing blank line
 	* upgrade now sets status.showUntrackedFiles (default no, override with
 	  $NOOK_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,

@@ -241,8 +241,13 @@ clone() {
 commit() {
 	hook_global pre-commit
 	shift  # remove the "commit" command.
+	# shellcheck disable=SC2039,SC3043
+	local nook_sep
+	nook_sep=
 	for NOOK_REPO_NAME in $(list); do
 		export NOOK_REPO_NAME
+		[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
+		nook_sep=1
 		echo "$NOOK_REPO_NAME: "
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
 		use
@@ -250,7 +255,6 @@ commit() {
 		@GIT@ commit --untracked-files=no --quiet "$@"
 		hook_repo post-commit
 		NOOK_COMMAND_RETURN_CODE=$?
-		echo
 	done
 	hook_global post-commit
 }
@@ -600,8 +604,13 @@ list_untracked_helper() {
 
 pull() {
 	hook_global pre-pull
+	# shellcheck disable=SC2039,SC3043
+	local nook_sep
+	nook_sep=
 	for NOOK_REPO_NAME in $(list_has_remote); do
 		export NOOK_REPO_NAME
+		[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
+		nook_sep=1
 		printf '%s: ' "$NOOK_REPO_NAME"
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
 		use
@@ -609,15 +618,19 @@ pull() {
 		@GIT@ pull
 		hook_repo post-pull
 		NOOK_COMMAND_RETURN_CODE=$?
-		echo
 	done
 	hook_global post-pull
 }
 
 push() {
 	hook_global pre-push
+	# shellcheck disable=SC2039,SC3043
+	local nook_sep
+	nook_sep=
 	for NOOK_REPO_NAME in $(list_has_remote); do
 		export NOOK_REPO_NAME
+		[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
+		nook_sep=1
 		printf '%s: ' "$NOOK_REPO_NAME"
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
 		use
@@ -625,7 +638,6 @@ push() {
 		@GIT@ push
 		hook_repo post-push
 		NOOK_COMMAND_RETURN_CODE=$?
-		echo
 	done
 	hook_global post-push
 }
