@@ -242,8 +242,7 @@ commit() {
 	hook_global pre-commit
 	shift  # remove the "commit" command.
 	# shellcheck disable=SC2039,SC3043
-	local nook_sep nook_repos nook_repo_count
-	nook_sep=
+	local nook_repos nook_repo_count
 	nook_repos=$(list)
 	nook_repo_count=$(printf '%s\n' "$nook_repos" | @GREP@ -c .)
 	for NOOK_REPO_NAME in $nook_repos; do
@@ -252,8 +251,6 @@ commit() {
 		# repo to tell apart; with a single repo it's just a line with
 		# nothing useful after it.
 		if [ "$nook_repo_count" -gt 1 ]; then
-			[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
-			nook_sep=1
 			echo "$NOOK_REPO_NAME: "
 		fi
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
@@ -618,15 +615,12 @@ list_untracked_helper() {
 pull() {
 	hook_global pre-pull
 	# shellcheck disable=SC2039,SC3043
-	local nook_sep nook_repos nook_repo_count
-	nook_sep=
+	local nook_repos nook_repo_count
 	nook_repos=$(list_has_remote)
 	nook_repo_count=$(printf '%s\n' "$nook_repos" | @GREP@ -c .)
 	for NOOK_REPO_NAME in $nook_repos; do
 		export NOOK_REPO_NAME
 		if [ "$nook_repo_count" -gt 1 ]; then
-			[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
-			nook_sep=1
 			printf '%s: ' "$NOOK_REPO_NAME"
 		fi
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR
@@ -642,15 +636,12 @@ pull() {
 push() {
 	hook_global pre-push
 	# shellcheck disable=SC2039,SC3043
-	local nook_sep nook_repos nook_repo_count
-	nook_sep=
+	local nook_repos nook_repo_count
 	nook_repos=$(list_has_remote)
 	nook_repo_count=$(printf '%s\n' "$nook_repos" | @GREP@ -c .)
 	for NOOK_REPO_NAME in $nook_repos; do
 		export NOOK_REPO_NAME
 		if [ "$nook_repo_count" -gt 1 ]; then
-			[ -n "$nook_sep" ] && echo   # blank line BETWEEN repos, not after the last one
-			nook_sep=1
 			printf '%s: ' "$NOOK_REPO_NAME"
 		fi
 		GIT_DIR=$NOOK_REPO_D/$NOOK_REPO_NAME.nook/$NOOK_REPO_NAME.git; export GIT_DIR

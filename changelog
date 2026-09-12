@@ -51,11 +51,11 @@
 	  NOT force-added -- git's "use -f" refusal still guards a deliberate
 	  ignore. Skipped for bulk forms (. -A -u -n --dry-run ...), an explicit
 	  -f, and $NOOK_ADD_FORCE=no. Uses `git check-ignore -v` to classify.
-	* commit/pull/push/foreach: the "<repo>: " label (and the blank line
-	  separating repos) is now skipped entirely when there is only one repo
-	  to act on -- with nothing to disambiguate, it was just a line with
-	  nothing useful after it. Still shown, and still separated by a blank
-	  line BETWEEN (not after) iterations, once there's more than one repo.
+	* commit/pull/push/foreach: the "<repo>: " label is now skipped entirely
+	  when there is only one repo to act on -- with nothing to disambiguate,
+	  it was just a line with nothing useful after it. Still shown once
+	  there's more than one repo, but no longer separated by a blank line
+	  between repos (removed per user preference).
 	* upgrade now sets status.showUntrackedFiles (default no, override with
 	  $NOOK_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,
