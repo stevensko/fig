@@ -118,6 +118,7 @@ function _nook () {
 		"rename:rename a repository"
 		"run:run command with <\$GIT_DIR> and <\$GIT_WORK_TREE> set"
 		"status:show statuses of all/one nook repositories"
+		"sync:add -u, commit, and push every repo in one step"
 		"upgrade:upgrade repository to currently recommended settings"
 		"version:print version information"
 		"which:find <substring> in name of any tracked file"

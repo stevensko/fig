@@ -66,7 +66,7 @@ _nook () {
 	for r in "${reponames[@]}"; do repos["$r"]="$r"; done
 	unset r reponames
 	local cmds
-	cmds="add clone config delete enter foreach help init commit list list-tracked list-untracked pull push rename bootstrap run status upgrade version which write-gitignore"
+	cmds="add clone config delete enter foreach help init commit list list-tracked list-untracked pull push rename bootstrap run status sync upgrade version which write-gitignore"
 
 	local subcword cmd subcmd
 	for (( subcword=1; subcword < ${#words[@]}-1; subcword++ )); do

@@ -56,6 +56,10 @@
 	  it was just a line with nothing useful after it. Still shown once
 	  there's more than one repo, but no longer separated by a blank line
 	  between repos (removed per user preference).
+	* New: `nook sync [<message>...]` -- add -u, commit, and push every repo
+	  in one step (message defaults to "update"). Prints Adding.../
+	  Committing.../Pushing... phase labels, but only with more than one
+	  repo, same rule as the per-repo label above.
 	* upgrade now sets status.showUntrackedFiles (default no, override with
 	  $NOOK_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,

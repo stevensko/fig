@@ -160,6 +160,8 @@ help() {
        <command>        Use this repository
    status \\
      [--terse] [<repo>] Show statuses of all/one nook repositories
+   sync [<message>]     Add -u, commit, and push every repo in one step;
+                        <message> defaults to "update"
    upgrade <repo>       Upgrade repository to currently recommended settings
    version              Print version information
    which <substring>    Find substring in name of any tracked file
@@ -654,6 +656,32 @@ push() {
 	hook_global post-push
 }
 
+sync() {
+	# `nook sync [<message>...]`: add -u, commit, and push every repo in one
+	# step. <message> (multiple words are joined with spaces) defaults to
+	# "update". Prints "Adding.../Committing.../Pushing..." phase labels, but
+	# only when there's more than one repo -- with a single repo there's
+	# nothing to disambiguate, matching commit/pull/push's own rule.
+	hook_global pre-sync
+	shift  # drop "sync"
+	# shellcheck disable=SC2039,SC3043
+	local msg nook_repos nook_repo_count
+	if [ $# -eq 0 ]; then
+		msg=update
+	else
+		msg=$*
+	fi
+	nook_repos=$(list)
+	nook_repo_count=$(printf '%s\n' "$nook_repos" | @GREP@ -c .)
+	[ "$nook_repo_count" -gt 1 ] && echo "Adding..."
+	foreach add -u
+	[ "$nook_repo_count" -gt 1 ] && echo "Committing..."
+	commit sync -m "$msg"
+	[ "$nook_repo_count" -gt 1 ] && echo "Pushing..."
+	push
+	hook_global post-sync
+}
+
 retire() {
 	unset NOOK_DIRECTORY
 }
@@ -913,6 +941,7 @@ case $NOOK_COMMAND in
 	renam|rena|ren|re) NOOK_COMMAND=rename;;
 	ru) NOOK_COMMAND=run;;
 	statu|stat|sta|st) NOOK_COMMAND=status;;
+	sync|syn|sy) NOOK_COMMAND=sync;;
 	upgrad|upgra|upgr|up) NOOK_COMMAND=upgrade;;
 	versio|versi|vers|ver|ve) NOOK_COMMAND=version;;
 	which|whi|wh) NOOK_COMMAND=which;;
@@ -1000,7 +1029,8 @@ elif [ x"$NOOK_COMMAND" = x'add' ] ||
 	[ x"$NOOK_COMMAND" = x'list-untracked' ] ||
 	[ x"$NOOK_COMMAND" = x'bootstrap' ] ||
 	[ x"$NOOK_COMMAND" = x'pull'   ] ||
-	[ x"$NOOK_COMMAND" = x'push'   ]; then
+	[ x"$NOOK_COMMAND" = x'push'   ] ||
+	[ x"$NOOK_COMMAND" = x'sync'   ]; then
 	:
 elif [ x"$NOOK_COMMAND" = x'status' ]; then
 	if [ x"$2" = x'--terse' ]; then

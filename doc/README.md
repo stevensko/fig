@@ -83,6 +83,7 @@ are covered in nook(1).
 | _Show status of changed files in all repositories_    |   `nook status`                                   |
 | _Pull from all repositories_                          |   `nook pull`                                     |
 | _Push to all repositories_                            |   `nook push`                                     |
+| _Add -u, commit, and push everything in one step_     |   `nook sync [<message>]`                         |
 
 
 # Overview
@@ -138,9 +139,11 @@ that word must come first), and every other repo in the list is cloned for you.
     nook clone <url-of-the-repo-holding-.repos> dotfiles
     nook bootstrap
 
-`nook pull` / `nook push` / `nook status` then operate on the whole set.
-Repositories that are not `nook` repos (a plain `~/src/project`, work
-checkouts) are out of scope; use a separate tool for those if you need it.
+`nook pull` / `nook push` / `nook status` then operate on the whole set, and
+`nook sync [<message>]` does `add -u` + `commit` + `push` in one step (default
+message "update"). Repositories that are not `nook` repos (a plain
+`~/src/project`, work checkouts) are out of scope; use a separate tool for
+those if you need it.
 
 ## Directory layout
 

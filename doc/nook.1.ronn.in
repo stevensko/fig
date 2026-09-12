@@ -43,6 +43,8 @@ nook(1) - Version Control System for $HOME - multiple Git repositories in $HOME
 
 `nook` status [<repo>]
 
+`nook` sync [<message>...]
+
 `nook` upgrade <repo>
 
 `nook` version
@@ -225,6 +227,18 @@ an interactive user.
 
 * status:
   Show statuses of all/one nook repositories.
+
+* sync:
+  `git add -u`, commit, and push every repo in one step. Equivalent to
+  running `foreach add -u`, `commit -m <message>`, and `push` in sequence.
+
+  `[<message>...]`: the commit message; multiple words are joined with
+  spaces, so quoting is optional. Defaults to "update".
+
+  Prints "Adding...", "Committing...", and "Pushing..." phase labels, but
+  only when there is more than one repo -- with a single repo there's
+  nothing to disambiguate, same rule as the per-repo label in `commit`,
+  `pull`, `push`, and `foreach`.
 
 * upgrade:
   Upgrade repository to currently recommended settings.
