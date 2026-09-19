@@ -21,16 +21,16 @@ eval {
 
 die $@ if $@;
 
-system (".././nook test1 add 'a'");
+system (".././fig test1 add 'a'");
 
-my $output = `.././nook status`;
+my $output = `.././fig status`;
 
 ok $output eq "test1:
 A  ~/a
 
 ", 'Adding a file works';
 
-$output = `.././nook status --terse`;
+$output = `.././fig status --terse`;
 
 ok $output eq "test1:
 A  ~/a

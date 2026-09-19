@@ -2,86 +2,86 @@
 
 Many distributions have packages ready to go.
 If yours doesn’t, you can install [from source](#installing-from-source).
-Nook can also be deployed as a [standalone script](#standalone-script).
-If you package Nook for a distro please let us know.
+Fig can also be deployed as a [standalone script](#standalone-script).
+If you package Fig for a distro please let us know.
 
 ## Arch Linux
 
 ```
-$ pacman -S nook
+$ pacman -S fig
 ```
 
 ## CentOS / Fedora / RedHat
 
 ```console
-$ yum install nook
+$ yum install fig
 ```
 
 ## Debian / Deepin / Kali Linux / Parrot / PureOS / Raspbian / Trisquel / Ubuntu
 
 ```console
-$ apt install nook
+$ apt install fig
 ```
 
 ## Gentoo / Funtoo / LiGurOS
 
 ```console
-$ emerge --ask dev-vcs/nook
+$ emerge --ask dev-vcs/fig
 ```
 
 ## GNU Guix
 
 ```console
-$ guix install nook
+$ guix install fig
 ```
 
 ## Homebrew (macOS) / Linuxbrew
 
 ```console
-$ brew install nook
+$ brew install fig
 ```
 
 ## KISS Linux
 
 ```console
-$ kiss install nook
+$ kiss install fig
 ```
 
 ## MacPorts (macOS)
 
 ```console
-$ port install nook
+$ port install fig
 ```
 
 ## NIX
 
 ```console
-$ nix-env -i nook
+$ nix-env -i fig
 ```
 
 ## openSUSE
 
 ```console
-$ zypper install nook
+$ zypper install fig
 ```
 
 ## Pardus
 
 ```console
-$ pisi install nook
+$ pisi install fig
 ```
 
 ## Termux
 
 ```console
-$ pkg install nook
+$ pkg install fig
 ```
 
 # Installing from Source
 
 First you’ll want a copy of the source code.
-The easiest to use place to get this is the [latest release](https://github.com/stevensko/nook/releases/latest) posted on GitHub.
-The souree distribution will have a name such as `nook-2.0.0.tar.zst`.
+The easiest to use place to get this is the [latest release](https://github.com/stevensko/fig/releases/latest) posted on GitHub.
+The souree distribution will have a name such as `fig-2.0.0.tar.zst`.
 Note under each release GitHub also show two “Source code” links that will download a snapshot of the repository; this is **not** the file you want (unless you want to jump through extra hoops).
 The official source release packages with the release version in the file names are the ones you want.
 
@@ -121,29 +121,29 @@ $ ./configure --prefix=/
 $ make DESTDIR="$HOME" install-exec
 ```
 
-This will install to `~/bin/nook`; add `~/bin` to your path to use.
+This will install to `~/bin/fig`; add `~/bin` to your path to use.
 
 # Standalone Script
 
-A special variant of Nook can be deployed as a single POSIX shell script with no configure/build step.
-Deploying it this way leaves you without any man page or shell completion functions (or possibly with mismatched resources installed by your package manager for a different nook version).
+A special variant of Fig can be deployed as a single POSIX shell script with no configure/build step.
+Deploying it this way leaves you without any man page or shell completion functions (or possibly with mismatched resources installed by your package manager for a different fig version).
 This variant is also dependent or your `$PATH` to have proper versions of dependencies such as `git`.
 If your user space has different tools by default than your system beware!
 
-The standalone variant can be downloaded from any recent entry in [releases](https://github.com/stevensko/nook/releases).
+The standalone variant can be downloaded from any recent entry in [releases](https://github.com/stevensko/fig/releases).
 
 This method is suited for installation to a user space where you don’t have control over the system packages, e.g.:
 
 ```console
 $ mkdir -p ~/bin
-$ curl -fsLS https://github.com/stevensko/nook/releases/latest/download/nook-standalone.sh -o ~/bin/nook
-$ chmod u+x ~/bin/nook
+$ curl -fsLS https://github.com/stevensko/fig/releases/latest/download/fig-standalone.sh -o ~/bin/fig
+$ chmod u+x ~/bin/fig
 ```
 
 It could also be used to directly bootstrap a dotfiles repository with something like this:
 
 ```console
-$ sh <(curl -fsLS https://github.com/stevensko/nook/releases/latest/download/nook-standalone.sh) clone <path_to_your_dotfiles_repo> dotfiles
+$ sh <(curl -fsLS https://github.com/stevensko/fig/releases/latest/download/fig-standalone.sh) clone <path_to_your_dotfiles_repo> dotfiles
 ```
 
 While we are enabling cURL-based workflows on purpose, we still encourage you to avoid them where reasonably possible. If you do use it, please consider using a tagged version that you’ve tested to work for you instead of the “latest” keyword. Note: the URL for tagged releases is in a different order than when using the “latest” keyword, substitute a tag name by changing `latest/download` to `download/v2.0.0`.

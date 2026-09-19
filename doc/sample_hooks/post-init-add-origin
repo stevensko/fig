@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This adds a remote origin at $GITURL/dotfiles/$NOOK_DIRECTORY which
+# This adds a remote origin at $GITURL/dotfiles/$FIG_DIRECTORY which
 # is helpful for creating new dotfile repositories that you plan to
 # store on (e.g.) Github.
 #
@@ -15,4 +15,4 @@ if [ -z $GITURL ]; then
     exit 1;
 fi
 
-nook $NOOK_DIRECTORY remote add origin $GITURL/dotfiles/$NOOK_DIRECTORY
+fig $FIG_DIRECTORY remote add origin $GITURL/dotfiles/$FIG_DIRECTORY

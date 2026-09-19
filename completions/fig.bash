@@ -1,6 +1,6 @@
 # run git command
 #   based on bash_completion:_command_offset()
-_nook_git_command () {
+_fig_git_command () {
 	local word_offset=$1
 	for (( i=0; i < word_offset; i++ )); do
 		for (( j=0; j <= ${#COMP_LINE}; j++ )); do
@@ -56,13 +56,13 @@ _nook_git_command () {
 	fi
 }
 
-_nook () {
+_fig () {
 	local cur prev words OPTS
 	_init_completion -n = || return
 
 	local r reponames
 	local -A repos
-	mapfile -t reponames < <(command nook list)
+	mapfile -t reponames < <(command fig list)
 	for r in "${reponames[@]}"; do repos["$r"]="$r"; done
 	unset r reponames
 	local cmds
@@ -128,7 +128,7 @@ _nook () {
 		foreach)
 			[[ $cur == -* ]] \
 				&& mapfile -t COMPREPLY < <(compgen -W "-g" -- "$cur") && return
-			_nook_git_command $subcword
+			_fig_git_command $subcword
 			return
 			;;
 
@@ -136,10 +136,10 @@ _nook () {
 
 	# git command on repository
 	if [[ -n "${repos[$cmd]}" ]]; then
-		: "${NOOK_REPO_D:=${XDG_CONFIG_HOME:-$HOME/.config}/nook}"
-		GIT_DIR="${NOOK_REPO_D}/${cmd}.nook/${cmd}.git" _nook_git_command "$subcword"
+		: "${FIG_REPO_D:=${XDG_CONFIG_HOME:-$HOME/.config}/fig}"
+		GIT_DIR="${FIG_REPO_D}/${cmd}.fig/${cmd}.git" _fig_git_command "$subcword"
 	fi
 	return 0
 }
 
-complete -F _nook nook
+complete -F _fig fig

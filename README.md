@@ -1,10 +1,10 @@
-# Nook Home Manager
+# conFig Files Manager
 
 Multiplex Git Repos in $Home for Dotfiles Management
 
-[![Build Status](https://github.com/stevensko/nook/actions/workflows/build.yml/badge.svg)](https://github.com/stevensko/nook/actions/workflows/build.yml)
+[![Build Status](https://github.com/stevensko/fig/actions/workflows/build.yml/badge.svg)](https://github.com/stevensko/fig/actions/workflows/build.yml)
 
-> A fork of [vcsh](https://github.com/RichiH/vcsh). The command is `nook`; everything lives under `~/.config/nook/` — one `<name>.nook/` directory per repo (holding `<name>.git/` plus its per-repo config/ignore/attributes). Nothing is created in `$HOME`.
+> A fork of [vcsh](https://github.com/RichiH/vcsh). The command is `fig`; everything lives under `~/.config/fig/` — one `<name>.fig/` directory per repo (holding `<name>.git/` plus its per-repo config/ignore/attributes). Nothing is created in `$HOME`.
 
 # Index
 
@@ -18,19 +18,19 @@ Multiplex Git Repos in $Home for Dotfiles Management
 # 30 Second How-to
 
 While it may appear that there's an overwhelming amount of documentation and
-while the explanation of the concepts behind `nook` needs to touch a few gory
-details of `git` internals, getting started with `nook` is extremely simple.
+while the explanation of the concepts behind `fig` needs to touch a few gory
+details of `git` internals, getting started with `fig` is extremely simple.
 
 Let's say you want to version control your `vim` configuration:
 
-    nook init vim
-    nook vim add ~/.vimrc ~/.vim
-    nook vim commit -m 'Initial commit of my Vim configuration'
+    fig init vim
+    fig vim add ~/.vimrc ~/.vim
+    fig vim commit -m 'Initial commit of my Vim configuration'
     # optionally push your files to a remote
-    nook vim remote add origin <remote>
-    nook vim push -u origin main
+    fig vim remote add origin <remote>
+    fig vim push -u origin main
     # from now on you can push additional commits like this
-    nook vim push
+    fig vim push
 
 If all that looks a _lot_ like standard `git`, that's no coincidence; it's
 a design feature.
@@ -38,10 +38,10 @@ a design feature.
 
 # Introduction
 
-[nook][nook] allows you to maintain several Git repositories in one single
+[fig][fig] allows you to maintain several Git repositories in one single
 directory. They all maintain their working trees without clobbering each other
 or interfering otherwise. By default, all Git repositories maintained via
-`nook` store the actual files in `$HOME` but you can override this setting if
+`fig` store the actual files in `$HOME` but you can override this setting if
 you want to.
 
 All this means that you can have one repository per application or application
@@ -54,17 +54,17 @@ or available to root and you may want to maintain different configuration for
 
 ## Talks
 
-Some people found it useful to look at [slides](https://github.com/RichiH/talks/blob/main/2013/10-linuxcon-eu/linuxcon_eu-2013-10-gitify_your_life.pdf) and videos explaining how `nook`
+Some people found it useful to look at [slides](https://github.com/RichiH/talks/blob/main/2013/10-linuxcon-eu/linuxcon_eu-2013-10-gitify_your_life.pdf) and videos explaining how `fig`
 works instead of working through the docs.
 All slides, videos, and further information can be found
 [on the author's talk page][talks].
 
 # Installation
 
-A lot of modern UNIX-based systems offer packages for `nook`. In case yours
+A lot of modern UNIX-based systems offer packages for `fig`. In case yours
 does not, read [INSTALL.md](doc/INSTALL.md) for instructions on installing from
 sources or even create a package for your system. If you do end up packaging
-`nook` please let us know so we can document package availability.
+`fig` please let us know so we can document package availability.
 
 # Detailed documentation
 
@@ -79,9 +79,9 @@ community around the general idea of version controlling your (digital) life.
 
 * Mailing list: [http://lists.madduck.net/listinfo/vcs-home][vcs-home-list]
 
-* Pull requests or issues on [https://github.com/stevensko/nook][nook]
+* Pull requests or issues on [https://github.com/stevensko/fig][fig]
 
 
 [talks]: https://github.com/RichiH/talks
-[nook]: https://github.com/stevensko/nook
+[fig]: https://github.com/stevensko/fig
 [vcs-home-list]: http://lists.madduck.net/listinfo/vcs-home

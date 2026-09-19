@@ -1,83 +1,83 @@
-nook(1) - Version Control System for $HOME - multiple Git repositories in $HOME
+fig(1) - Version Control System for $HOME - multiple Git repositories in $HOME
 ===============================================================================
 
 ## SYNOPSIS
 
-`nook` [<options>] <command>
+`fig` [<options>] <command>
 
-`nook` add <repo>
+`fig` add <repo>
 
-`nook` add --all|-a
+`fig` add --all|-a
 
-`nook` clone [-b <branch>] <url> [<repo>]
+`fig` clone [-b <branch>] <url> [<repo>]
 
-`nook` bootstrap [--include=<tags>] [--exclude=<tags>] [@<tags>] [<file>]
+`fig` bootstrap [--include=<tags>] [--exclude=<tags>] [@<tags>] [<file>]
 
-`nook` clone --all|-a|@<tags> [--include=<tags>] [--exclude=<tags>] [<file>]
+`fig` clone --all|-a|@<tags> [--include=<tags>] [--exclude=<tags>] [<file>]
 
-`nook` config [<git config arguments>]
+`fig` config [<git config arguments>]
 
-`nook` delete <repo>
+`fig` delete <repo>
 
-`nook` enter <repo>
+`fig` enter <repo>
 
-`nook` foreach [-g] <git command>
+`fig` foreach [-g] <git command>
 
-`nook` help
+`fig` help
 
-`nook` init <repo>
+`fig` init <repo>
 
-`nook` list
+`fig` list
 
-`nook` list-tracked [<repo>]
+`fig` list-tracked [<repo>]
 
-`nook` list-untracked [<-a>] [<-r>] [<repo>]
+`fig` list-untracked [<-a>] [<-r>] [<repo>]
 
-`nook` pull
+`fig` pull
 
-`nook` push
+`fig` push
 
-`nook` rename <repo> <newname>
+`fig` rename <repo> <newname>
 
-`nook` run <repo> <shell command>
+`fig` run <repo> <shell command>
 
-`nook` status [<repo>]
+`fig` status [<repo>]
 
-`nook` sync [<message>...]
+`fig` sync [<message>...]
 
-`nook` upgrade <repo>
+`fig` upgrade <repo>
 
-`nook` version
+`fig` version
 
-`nook` which <substring>
+`fig` which <substring>
 
-`nook` write-gitignore [<repo>]
+`fig` write-gitignore [<repo>]
 
-`nook` <repo> <gitcommand>
+`fig` <repo> <gitcommand>
 
-`nook` <repo>
+`fig` <repo>
 
 
 ## DESCRIPTION
 
-`nook` allows you to have several `git`(1) repositories, all maintaining their
+`fig` allows you to have several `git`(1) repositories, all maintaining their
 working trees in $HOME without clobbering each other. That, in turn, means you
 can have one repository per config set (zsh, vim, ssh, etc), picking and
 choosing which configs you want to use on which machine.
 
-`nook` is using a technique called fake bare Git repositories, keeping <$GIT_DIR>
+`fig` is using a technique called fake bare Git repositories, keeping <$GIT_DIR>
 in a different directory from <$GIT_WORK_TREE> which is pointed to <$HOME>.
 
 The use of symlinks is not needed in this setup, making for a cleaner setup.
 
-To set up a new machine, `nook` has a built-in bootstrap. You populate
-<$NOOK_REPOS> ("<name> <url> <branch> @tags," per repo) with `nook add
-<repo> [<tags>]` or `nook add --all`, and track that file in one of your
-repos. On the new machine `nook bootstrap` (also `nook clone --all`)
+To set up a new machine, `fig` has a built-in bootstrap. You populate
+<$FIG_REPOS> ("<name> <url> <branch> @tags," per repo) with `fig add
+<repo> [<tags>]` or `fig add --all`, and track that file in one of your
+repos. On the new machine `fig bootstrap` (also `fig clone --all`)
 clones everything listed there that is not already present. Give a repo an
 optional comma-separated tag list (4th column). An untagged repo is always
 cloned; a tagged repo is opt-in and clones only when one of its tags is
-given via `nook bootstrap --include=<tags>` (`--exclude=<tags>` always wins).
+given via `fig bootstrap --include=<tags>` (`--exclude=<tags>` always wins).
 
 Please note that you can always use a path instead of a name for <repo>.
 This is needed to support external scripts properly and of no concern to
@@ -97,12 +97,12 @@ an interactive user.
 ## COMMANDS
 
 * add:
-  Append a repository to <$NOOK_REPOS> ("<name> <url> <branch> @tags,"). This
+  Append a repository to <$FIG_REPOS> ("<name> <url> <branch> @tags,"). This
   is the only thing that writes that file.
 
   `<repo> [<tags>]`: add that repo, with an optional comma-separated tag list
   as a 4th column. Tags are stored with a leading `@` and a trailing `,`
-  (`nook add nvim laptop,work` writes `nvim <url> main @laptop,work,`); a
+  (`fig add nvim laptop,work` writes `nvim <url> main @laptop,work,`); a
   leading `@` or trailing `,` you pass in is absorbed. The repo must exist
   locally and have an <origin> remote. Already-listed repos are left alone.
 
@@ -119,25 +119,25 @@ an interactive user.
   option to specify a branch at clone time, the default is `master`.
 
   `--all` (or `-a`, or a bare `@<tags>`): ignore <url>/<repo> and instead
-  bootstrap from <$NOOK_REPOS> (untagged rows, plus any tagged subset --
-  `nook clone @laptop` == `nook bootstrap --include=laptop`). See `bootstrap`
+  bootstrap from <$FIG_REPOS> (untagged rows, plus any tagged subset --
+  `fig clone @laptop` == `fig bootstrap --include=laptop`). See `bootstrap`
   for the tag rules. This word must come first after `clone`
-  (`nook clone --all [<file>]`, `nook clone @laptop`); it is not a normal
+  (`fig clone --all [<file>]`, `fig clone @laptop`); it is not a normal
   option and cannot be combined with `-b` or a <url>.
 
 * commit:
   Commit in all repositories
 
 * config:
-  Edit <$NOOK_GITCONFIG>, a git config file that every nook repository
+  Edit <$FIG_GITCONFIG>, a git config file that every fig repository
   includes (wired up by `upgrade`). Arguments are passed straight to
   `git config`; with none, the file is listed. Use it for settings that
   should apply to every repo, e.g.
 
-      nook config credential.helper '!gh auth git-credential'
-      nook config user.email you@example.com
+      fig config credential.helper '!gh auth git-credential'
+      fig config user.email you@example.com
 
-  Per-repo settings still go through `nook <repo> config ...`.
+  Per-repo settings still go through `fig <repo> config ...`.
 
 * delete:
   Delete an existing repository.
@@ -146,7 +146,7 @@ an interactive user.
   Enter repository; spawn new <$SHELL> with <$GIT_DIR> set.
 
 * foreach:
-  Execute git command for every nook repository.
+  Execute git command for every fig repository.
 
   `-g`: Execute in general context.
 
@@ -157,10 +157,10 @@ an interactive user.
   Initialize an empty repository.
 
 * list:
-  List all local nook repositories.
+  List all local fig repositories.
 
 * list-tracked:
-  List all files tracked by nook.
+  List all files tracked by fig.
 
   If you want to list files tracked by a specific repository, simply
   append the repository's name last.
@@ -171,7 +171,7 @@ an interactive user.
   This is a legacy command; you should use `list-tracked <repo>` instead.
 
 * list-untracked:
-  List all files NOT tracked by nook.
+  List all files NOT tracked by fig.
 
   `-a`: Show all files.
   By default, the `git ls-files --exclude-standard` is called.
@@ -183,24 +183,24 @@ an interactive user.
   `$repo`: List files not tracked by this specific repository.
 
 * pull:
-  Pull from all nook remotes.
+  Pull from all fig remotes.
 
 * push:
-  Push to all nook remotes.
+  Push to all fig remotes.
 
 * bootstrap:
-  Read <$NOOK_REPOS> and run `nook clone` for every listed repository that
+  Read <$FIG_REPOS> and run `fig clone` for every listed repository that
   is not already present locally. Existing repos are left untouched. The forms
-  `nook bootstrap`, `nook clone --all` and `nook clone -a` are equivalent.
+  `fig bootstrap`, `fig clone --all` and `fig clone -a` are equivalent.
 
   A row with no 4th-column tags is always cloned. A row that has tags is
   opt-in: it is cloned only when `--include` names one of its tags, so a
-  bare `nook bootstrap` clones the untagged rows only.
+  bare `fig bootstrap` clones the untagged rows only.
 
   `--include=<tags>`: comma-separated. Also clone tagged rows that carry one
   of these tags.
 
-  `@<tags>`: a bare positional starting with `@` (e.g. `nook bootstrap @laptop`
+  `@<tags>`: a bare positional starting with `@` (e.g. `fig bootstrap @laptop`
   or `@laptop,work`) is shorthand for `--include=<tags>`. Repeated
   `--include` / `--exclude` / `@<tags>` arguments accumulate.
 
@@ -208,7 +208,7 @@ an interactive user.
   Exclude wins over include. Matching is case-insensitive, and a leading `@`
   on any tag you pass is optional (`--include=@laptop` == `--include=laptop`).
 
-  `<file>`: read from this path instead of <$NOOK_REPOS>. A file argument is
+  `<file>`: read from this path instead of <$FIG_REPOS>. A file argument is
   told apart from `@<tags>` by the leading `@`.
 
 * rename:
@@ -220,13 +220,13 @@ an interactive user.
 
   Please note that there is a somewhat magic feature for run. Instead of <repo>
   it accepts <path>, as well. Anything that has a slash in it will be assumed to
-  be a path. `nook run` will then operate on this directory instead of the one
+  be a path. `fig run` will then operate on this directory instead of the one
   normally generated from the repository's name.
   This is needed to support external scripts properly and of no concern to
   an interactive user.
 
 * status:
-  Show statuses of all/one nook repositories.
+  Show statuses of all/one fig repositories.
 
 * sync:
   `git add -u`, commit, and push every repo in one step. Equivalent to
@@ -250,84 +250,84 @@ an interactive user.
   Find <substring> in name of any tracked file.
 
 * write-gitignore:
-  Write <repo>.nook/.gitignore via `git ls-files`. If <repo> is not specified
-  but we're within a nook repository, use that.
+  Write <repo>.fig/.gitignore via `git ls-files`. If <repo> is not specified
+  but we're within a fig repository, use that.
 
 * <repo> <gitcommand>:
   Shortcut to run `git` commands on a repo. Will prepend `git` to <gitcommand>.
 
 * <repo>:
-  Shortcut to run `nook enter <repo>`.
+  Shortcut to run `fig enter <repo>`.
 
 ## ENVIRONMENT
 
-As noted earlier, `nook` will set <$GIT_DIR> and <$GIT_WORK_TREE> to the
+As noted earlier, `fig` will set <$GIT_DIR> and <$GIT_WORK_TREE> to the
 appropriate values for fake bare Git repositories.
 
 ## CONFIG
 
-There are several ways to turn the various knobs on `nook`. In order of
+There are several ways to turn the various knobs on `fig`. In order of
 ascending precedence, they are:
 
-* `VARIABLE=foo nook`
-* </etc/nook/nookrc>
-* <$XDG_CONFIG_HOME/nook/.nookrc>
-* <$NOOK_REPO_D/<repo>.nook/.nookrc> (only when acting on <repo>)
-* `nook -c <file>`
+* `VARIABLE=foo fig`
+* </etc/fig/figrc>
+* <$XDG_CONFIG_HOME/fig/.figrc>
+* <$FIG_REPO_D/<repo>.fig/.figrc> (only when acting on <repo>)
+* `fig -c <file>`
 
 Please note that those files are sourced. Any and all commands will be
 executed in the context of your shell.
 
-The per-repo file <$XDG_CONFIG_HOME/nook/<repo>.nook/.nookrc> is read only
-while operating on that repository. It lives inside the <repo>.nook/
+The per-repo file <$XDG_CONFIG_HOME/fig/<repo>.fig/.figrc> is read only
+while operating on that repository. It lives inside the <repo>.fig/
 directory (next to <repo>.git/), which `rename` moves and `delete` removes as
 a whole.
 
 Separately from those shell files, `upgrade` points every repository's
-`include.path` at <$NOOK_GITCONFIG>
-(<$XDG_CONFIG_HOME/nook/.gitconfig>). Put git settings that should apply
+`include.path` at <$FIG_GITCONFIG>
+(<$XDG_CONFIG_HOME/fig/.gitconfig>). Put git settings that should apply
 to all repositories there -- `credential.helper`, `user.name`, `user.email`,
 and so on -- via the `config` command. `upgrade` also sets
-`status.showUntrackedFiles` in each repo (see <$NOOK_SHOW_UNTRACKED>) and
-`core.excludesfile` / `core.attributesfile` (see <$NOOK_GITIGNORE_FILE>).
+`status.showUntrackedFiles` in each repo (see <$FIG_SHOW_UNTRACKED>) and
+`core.excludesfile` / `core.attributesfile` (see <$FIG_GITIGNORE_FILE>).
 
 Because the shared fallback ignore file is a single `*` (so `git add .` in a
-nook repo does not vacuum up all of `$HOME`), `nook <repo> add <path> ...`
+fig repo does not vacuum up all of `$HOME`), `fig <repo> add <path> ...`
 supplies `-f` for you when the catch-all `*` is the only thing ignoring the
 named paths. If any path is matched by a more specific pattern -- a
-hand-written rule in a <repo>.nook/.gitignore, `.git/info/exclude`, etc. --
-`nook` does not force, so git's normal "use -f" refusal still protects a
+hand-written rule in a <repo>.fig/.gitignore, `.git/info/exclude`, etc. --
+`fig` does not force, so git's normal "use -f" refusal still protects a
 deliberate ignore. The implicit `-f` is also skipped for bulk forms (`.`,
 `-A`, `--all`, `-u`, `--update`, `-n`, `--dry-run`, ...), when you pass
-`-f`/`--force` yourself, and when <$NOOK_ADD_FORCE> is <no>.
+`-f`/`--force` yourself, and when <$FIG_ADD_FORCE> is <no>.
 
 Interesting knobs you can turn:
 
-* <$NOOK_GITCONFIG>:
+* <$FIG_GITCONFIG>:
   Path of the shared git config file included by every repository.
 
-  Defaults to <$XDG_CONFIG_HOME/nook/.gitconfig>.
+  Defaults to <$XDG_CONFIG_HOME/fig/.gitconfig>.
 
-* <$NOOK_ADD_FORCE>:
-  Set to <no> to disable the implicit `-f` on `nook <repo> add` described
+* <$FIG_ADD_FORCE>:
+  Set to <no> to disable the implicit `-f` on `fig <repo> add` described
   above, so `add` behaves exactly like `git add`.
 
   Defaults to unset (implicit `-f` enabled).
 
-* <$NOOK_GITIGNORE_FILE>, <$NOOK_GITATTRIBUTES_FILE>:
+* <$FIG_GITIGNORE_FILE>, <$FIG_GITATTRIBUTES_FILE>:
   Shared fallback ignore / attributes files, used by a repo when it has no
-  <repo>.nook/.gitignore (resp. gitattributes) of its own.
+  <repo>.fig/.gitignore (resp. gitattributes) of its own.
 
-  Default to <$XDG_CONFIG_HOME/nook/.gitignore> and
-  <$XDG_CONFIG_HOME/nook/.gitattributes>.
+  Default to <$XDG_CONFIG_HOME/fig/.gitignore> and
+  <$XDG_CONFIG_HOME/fig/.gitattributes>.
 
-* <$NOOK_SHOW_UNTRACKED>:
+* <$FIG_SHOW_UNTRACKED>:
   Value written to `status.showUntrackedFiles` in each repo by `upgrade`.
 
-  Defaults to <no>, so `git status` in a nook repo ignores the rest of
+  Defaults to <no>, so `git status` in a fig repo ignores the rest of
   `$HOME`. Set to <normal> (or override per repo) to see untracked files.
 
-* <$NOOK_GITATTRIBUTES>:
+* <$FIG_GITATTRIBUTES>:
   Can be <none>, or any other value.
 
   <none> will not maintain Git attributes in a special location.
@@ -336,7 +336,7 @@ Interesting knobs you can turn:
 
   Defaults to <none>.
 
-* <$NOOK_GITIGNORE>:
+* <$FIG_GITIGNORE>:
   Can be <exact>, <none>, or <recursive>.
 
   <exact> will seed the repo-specific ignore file with all file and directory
@@ -349,7 +349,7 @@ Interesting knobs you can turn:
 
   Defaults to <exact>.
 
-* <$NOOK_WORKTREE>:
+* <$FIG_WORKTREE>:
   Can be <absolute>, or <relative>.
 
   <absolute> will set an absolute path; defaulting to <$HOME>.
@@ -360,7 +360,7 @@ Interesting knobs you can turn:
 
 Less interesting knobs you could turn:
 
-* <$NOOK_DEBUG>:
+* <$FIG_DEBUG>:
   Enter debug mode.
 
 * <$XDG_CONFIG_HOME>:
@@ -369,24 +369,24 @@ Less interesting knobs you could turn:
 
   Defaults to <$HOME/.config>.
 
-* <$NOOK_REPO_D>:
+* <$FIG_REPO_D>:
   The directory where repositories are read from and stored.
 
-  Defaults to <$XDG_CONFIG_HOME/nook>.
+  Defaults to <$XDG_CONFIG_HOME/fig>.
 
-* <$NOOK_REPOS>:
-  The repo list you build with `nook add` and `bootstrap` reads
-  ("<name> <url> <branch> @tags," per repo). `nook` never writes it on its own --
+* <$FIG_REPOS>:
+  The repo list you build with `fig add` and `bootstrap` reads
+  ("<name> <url> <branch> @tags," per repo). `fig` never writes it on its own --
   `delete` and `rename` leave stale lines for you to edit out.
 
-  Defaults to <$XDG_CONFIG_HOME/nook/.repos>.
+  Defaults to <$XDG_CONFIG_HOME/fig/.repos>.
 
-* <$NOOK_HOOK_D>:
+* <$FIG_HOOK_D>:
   The directory where hooks are read from.
 
-  Defaults to <$XDG_CONFIG_HOME/nook/hooks>.
+  Defaults to <$XDG_CONFIG_HOME/fig/hooks>.
 
-* <$NOOK_BASE>:
+* <$FIG_BASE>:
   The directory where repositories are checked out to.
 
   Defaults to <$HOME>.
@@ -394,8 +394,8 @@ Less interesting knobs you could turn:
 
 ## HOOK SYSTEM
 
-`nook` provides a hook system. Hook scripts must be executable and placed in
-<$XDG_CONFIG_HOME/nook/hooks> (or wherever <$NOOK_HOOK_D> points); `nook`
+`fig` provides a hook system. Hook scripts must be executable and placed in
+<$XDG_CONFIG_HOME/fig/hooks> (or wherever <$FIG_HOOK_D> points); `fig`
 runs every executable hook it finds there.
 
 Hooks follow a simple format. <pre-run> will be run before anything is run.
@@ -404,7 +404,7 @@ any kind of string to order them. A system of <pre-run>, <pre-run\.10>,
 <pre-run\.20> etc is suggested; other options would be <pre-run-10> or
 <pre-run\.sh>. A dot after the hook name is optional.
 
-If you want to create hooks for a specific <nook> repository, simply prepend
+If you want to create hooks for a specific <fig> repository, simply prepend
 the repository's name, followed by a dot, i.e. <zsh\.pre-run>. Otherwise, the
 same rules as above apply. The dot between the repository's name and the hook
 is mandatory, though.
@@ -413,21 +413,21 @@ Available hooks are <pre-clone>, <post-clone>, <post-clone-retired>,
 <pre-command>, <post-command>, <pre-enter>, <post-enter>, <pre-init>,
 <post-init>, <pre-pull>, <post-pull>, <pre-push>, <post-push>, <pre-run>,
 <post-run>, <pre-upgrade>, and <post-upgrade>.
-If you need more, nook is trivial to patch, but please let upstream know so
+If you need more, fig is trivial to patch, but please let upstream know so
 we can ship them by default.
 
 ## OVERLAY SYSTEM
 
-`nook` also provides an overlay system. Similar to hooks, overlay scripts go
-in <$XDG_CONFIG_HOME/nook/overlays> (or wherever <$NOOK_OVERLAY_D> points).
+`fig` also provides an overlay system. Similar to hooks, overlay scripts go
+in <$XDG_CONFIG_HOME/fig/overlays> (or wherever <$FIG_OVERLAY_D> points).
 
 Overlays follow the same rules as hooks and you are free to overwrite any
 and all functions. Same as hooks, you can use global or repository-specific
-overlays by using either <$NOOK_OVERLAY_D/$NOOK_COMMAND> or
-<$NOOK_OVERLAY_D/$NOOK_REPO_NAME.$NOOK_COMMAND>.
+overlays by using either <$FIG_OVERLAY_D/$FIG_COMMAND> or
+<$FIG_OVERLAY_D/$FIG_REPO_NAME.$FIG_COMMAND>.
 
 Please note that nothing stops you from, e.g. overwriting `status()` in
-<$NOOK_OVERLAY_D/commit>. As the overlays will be sourced and you are
+<$FIG_OVERLAY_D/commit>. As the overlays will be sourced and you are
 replacing arbitrary functions, any and all features may stop working, or you
 may even lose data.
 
@@ -440,17 +440,17 @@ While the author tried to avoid this in this case, manpages can not cover
 detailed howtos.
 
 This software also comes with a file called <README\.md>. It contains various
-approaches to setting up and using nook. You can view the file it as
+approaches to setting up and using fig. You can view the file it as
 plain text or render it into various other formats via Markdown.
 
-On Debian-based systems, this file can be found in </usr/share/doc/nook>.
+On Debian-based systems, this file can be found in </usr/share/doc/fig>.
 
 ## SECURITY CONSIDERATIONS
 
-`nook` allows you to execute arbitrary commands via `nook run`. For example,
-adding a `sudo`(8) rule for `nook` would be pretty stupid.
+`fig` allows you to execute arbitrary commands via `fig run`. For example,
+adding a `sudo`(8) rule for `fig` would be pretty stupid.
 
-Additionally, nook will source, i.e. execute, all files listed in <CONFIG>.
+Additionally, fig will source, i.e. execute, all files listed in <CONFIG>.
 You can put any and all commands into these config files and they will be
 executed.
 
@@ -472,13 +472,13 @@ config files, all of which were soft-linked into <$HOME>.
 Martin F. Krafft aka madduck came up with the concept of fake bare Git
 repositories.
 
-nook was initially written by madduck. This version is a re-implementation from
+fig was initially written by madduck. This version is a re-implementation from
 scratch with a lot more features. madduck graciously agreed to let the author
 take over the name.
 
 ## AUTHOR
 
-This manpage and `nook` itself were written by Richard "RichiH" Hartmann.
+This manpage and `fig` itself were written by Richard "RichiH" Hartmann.
 
 ## COPYRIGHT
 

@@ -1,9 +1,9 @@
 #!/bin/sh
-# Build the standalone nook from this source tree and install it under a
+# Build the standalone fig from this source tree and install it under a
 # user-writable prefix (default: ~/.local). No root, no autotools, no configure.
 #
-#   ./install-local.sh            # install to ~/.local/bin/nook
-#   ./install-local.sh ~/opt      # install to ~/opt/bin/nook
+#   ./install-local.sh            # install to ~/.local/bin/fig
+#   ./install-local.sh ~/opt      # install to ~/opt/bin/fig
 #   PREFIX=~/.local ./install-local.sh --uninstall
 #
 set -eu
@@ -27,18 +27,18 @@ case ${1:-} in
 	*) prefix=$1; uninstall=0 ;;
 esac
 bindir=$prefix/bin
-target=$bindir/nook
+target=$bindir/fig
 
 if [ "$uninstall" = 1 ]; then
 	rm -f "$target"
 	echo "removed: $target"
-	echo "(your repos and config in ~/.config/nook/ are untouched)"
-	command -v nook >/dev/null 2>&1 && echo "nook now resolves to: $(command -v nook)"
+	echo "(your repos and config in ~/.config/fig/ are untouched)"
+	command -v fig >/dev/null 2>&1 && echo "fig now resolves to: $(command -v fig)"
 	exit 0
 fi
 
 cd "$src_dir"
-[ -f nook.in ] || { echo "error: nook.in not found in $src_dir" >&2; exit 1; }
+[ -f fig.in ] || { echo "error: fig.in not found in $src_dir" >&2; exit 1; }
 
 ver=$(./build-aux/git-version-gen .tarball-version 2>/dev/null || echo unknown)
 
@@ -49,10 +49,10 @@ sed -e 's|@SHELL@|/bin/sh|g' \
     -e 's|@SED@|sed|g' \
     -e 's|@WC@|wc|g' \
     -e 's|@COMM@|comm|g' \
-    -e 's|@TRANSFORMED_PACKAGE_NAME@|nook|g' \
+    -e 's|@TRANSFORMED_PACKAGE_NAME@|fig|g' \
     -e "s|@VERSION@|$ver|g" \
     -e 's|@DEPLOYMENT@|-standalone|g' \
-    nook.in > "$target"
+    fig.in > "$target"
 chmod +x "$target"
 
 printf 'installed: %s\n' "$target"
@@ -67,7 +67,7 @@ case :${PATH:-}: in
 	*:"$bindir":*) ;;
 	*) echo "note: $bindir is not on your PATH" >&2 ;;
 esac
-if command -v nook >/dev/null 2>&1 && [ "$(command -v nook)" != "$target" ]; then
-	echo "note: 'nook' still resolves to $(command -v nook)"
+if command -v fig >/dev/null 2>&1 && [ "$(command -v fig)" != "$target" ]; then
+	echo "note: 'fig' still resolves to $(command -v fig)"
 	echo "      run 'hash -r' or open a new shell to pick up $target"
 fi

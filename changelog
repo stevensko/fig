@@ -1,67 +1,67 @@
 2026-08-29  stevensko <skovraneksteven@gmail.com>
 
-	* Fork of vcsh, rebranded as "Nook Dotfiles Manager"
-	* Command renamed vcsh -> nook
-	* Environment variables renamed VCSH_* -> NOOK_*
+	* Fork of vcsh, rebranded as "conFig Files Manager"
+	* Command renamed vcsh -> fig
+	* Environment variables renamed VCSH_* -> FIG_*
 	* Nothing is created under $HOME any more. Everything lives in
-	  $XDG_CONFIG_HOME/nook/:
-	    - one <repo>.nook/ directory per repo, containing:
+	  $XDG_CONFIG_HOME/fig/:
+	    - one <repo>.fig/ directory per repo, containing:
 	        <repo>.git/     the git directory
-	        .nookrc       per-repo shell rc (sourced), was config.d/<repo>
+	        .figrc       per-repo shell rc (sourced), was config.d/<repo>
 	        .gitignore      per-repo ignore file  (was ~/.gitignore.d/<repo>)
 	        .gitattributes  per-repo attributes   (was ~/.gitattributes.d/<repo>)
-	    - shared: .nookrc (shell rc), .gitignore / .gitattributes /
+	    - shared: .figrc (shell rc), .gitignore / .gitattributes /
 	      .gitconfig, the .repos list, and the hooks/ overlays/ dirs
 	  upgrade() points core.excludesfile / core.attributesfile at the
 	  per-repo file if present, else the shared one. These files are no
 	  longer tracked by the repo (they are outside $HOME).
 	* The shared .gitignore is seeded with `*` on first run, so `git add .`
-	  in a nook repo is safe by default; `nook <repo> add -f <path>`
-	  tracks a new file. Trade-off: `nook list-untracked` returns nothing
-	  unless you make a curated per-repo .gitignore (nook write-gitignore).
+	  in a fig repo is safe by default; `fig <repo> add -f <path>`
+	  tracks a new file. Trade-off: `fig list-untracked` returns nothing
+	  unless you make a curated per-repo .gitignore (fig write-gitignore).
 	* Hook/overlay dirs lost the -enabled suffix: hooks/ and overlays/.
-	* Shell rc file renamed: ~/.config/nook/config -> ~/.config/nook/.nookrc
-	  (and per-repo <repo>.nook/config -> <repo>.nook/.nookrc); system
-	  file /etc/vcsh/config -> /etc/nook/nookrc
-	* Source script renamed vcsh.in -> nook.in; man page vcsh.1 -> nook.1
-	* $XDG_CONFIG_HOME/nook/.repos ("<name> <url> <branch> @tags," per repo)
-	  is populated manually with `nook add <repo> [<tags>]` / `nook add --all`;
-	  nook never writes it on its own (delete/rename leave stale lines).
-	  There is no `manifest` command. `nook bootstrap` -- equivalently
-	  `nook clone --all` / `-a` -- clones everything listed there that is
+	* Shell rc file renamed: ~/.config/fig/config -> ~/.config/fig/.figrc
+	  (and per-repo <repo>.fig/config -> <repo>.fig/.figrc); system
+	  file /etc/vcsh/config -> /etc/fig/figrc
+	* Source script renamed vcsh.in -> fig.in; man page vcsh.1 -> fig.1
+	* $XDG_CONFIG_HOME/fig/.repos ("<name> <url> <branch> @tags," per repo)
+	  is populated manually with `fig add <repo> [<tags>]` / `fig add --all`;
+	  fig never writes it on its own (delete/rename leave stale lines).
+	  There is no `manifest` command. `fig bootstrap` -- equivalently
+	  `fig clone --all` / `-a` -- clones everything listed there that is
 	  not already present. Built-in, no myrepos/gita.
 	* .repos rows take an optional tag field after the branch, always stored
-	  with a leading "@" and a trailing "," (`nook add <repo> a,b` writes
+	  with a leading "@" and a trailing "," (`fig add <repo> a,b` writes
 	  "@a,b,"; a leading "@" or trailing "," you pass is absorbed).
 	  An untagged row is always cloned; a tagged row is opt-in and is cloned
-	  only when `nook bootstrap --include=` names one of its tags, so a bare
-	  `nook bootstrap` clones the untagged rows only. `--exclude=` always
+	  only when `fig bootstrap --include=` names one of its tags, so a bare
+	  `fig bootstrap` clones the untagged rows only. `--exclude=` always
 	  wins; matching is case-insensitive, and a leading "@" on tags passed
-	  to --include/--exclude is optional (matching `nook add`). A bare
+	  to --include/--exclude is optional (matching `fig add`). A bare
 	  "@tag" / "@a,b" positional is shorthand for --include; it works for
-	  `nook bootstrap` and `nook clone` alike (`nook clone @laptop`), and
+	  `fig bootstrap` and `fig clone` alike (`fig clone @laptop`), and
 	  repeated include/exclude/@tag args accumulate. A missing trailing
 	  newline on the last row is tolerated.
-	* New: `nook config <git config args>` edits a shared git config file
-	  ($NOOK_GITCONFIG) that every repo includes via include.path;
+	* New: `fig config <git config args>` edits a shared git config file
+	  ($FIG_GITCONFIG) that every repo includes via include.path;
 	  set credential.helper, user.email, etc. once for all repos
-	* `nook <repo> add <path>` now supplies `-f` automatically when the only
-	  thing ignoring the named paths is nook's catch-all `*`. A path matched
+	* `fig <repo> add <path>` now supplies `-f` automatically when the only
+	  thing ignoring the named paths is fig's catch-all `*`. A path matched
 	  by a real rule (a per-repo .gitignore line, .git/info/exclude, ...) is
 	  NOT force-added -- git's "use -f" refusal still guards a deliberate
 	  ignore. Skipped for bulk forms (. -A -u -n --dry-run ...), an explicit
-	  -f, and $NOOK_ADD_FORCE=no. Uses `git check-ignore -v` to classify.
+	  -f, and $FIG_ADD_FORCE=no. Uses `git check-ignore -v` to classify.
 	* commit/pull/push/foreach: the "<repo>: " label is now skipped entirely
 	  when there is only one repo to act on -- with nothing to disambiguate,
 	  it was just a line with nothing useful after it. Still shown once
 	  there's more than one repo, but no longer separated by a blank line
 	  between repos (removed per user preference).
-	* New: `nook sync [<message>...]` -- add -u, commit, and push every repo
+	* New: `fig sync [<message>...]` -- add -u, commit, and push every repo
 	  in one step (message defaults to "update"). Prints Adding.../
 	  Committing.../Pushing... phase labels, but only with more than one
 	  repo, same rule as the per-repo label above.
 	* upgrade now sets status.showUntrackedFiles (default no, override with
-	  $NOOK_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
+	  $FIG_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,
 	  glob characters, or non-ASCII bytes are removed correctly
 	* Drop the myrepos (post-init-setup-mr) sample hook; bootstrapping is
@@ -131,12 +131,12 @@
 	* Post source builds as part of automated release process
 	* Switch to versioning scheme to semver
 	* Replace Travis test runner with GitHub Actions
-	* Make NOOK_* variables available to hooks
+	* Make FIG_* variables available to hooks
 	* More carefully handle shell quoting
 	* Improve handling of non-default remote names and branches
 	* Fix per-repo pre/post hook handling
-	* Output path relative to $HOME in ‘nook status’
-	* Add flag to prefix output of ‘nook foreach -p’ with repo name
+	* Output path relative to $HOME in ‘fig status’
+	* Add flag to prefix output of ‘fig foreach -p’ with repo name
 	* Fix debugging on Windows 10 / Cygwin
 	* Improve option flag handling to allow multiple flags, squash bugs
 	* Don't require Ruby or Perl tooling to build and install
@@ -152,7 +152,7 @@
 2021-04-05  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.20190621
-	* Make version reflected in `nook version` correct...
+	* Make version reflected in `fig version` correct...
 
 2021-03-29  Richard Hartmann <richih.mailinglist@gmail.com>
 
@@ -169,16 +169,16 @@
 
 2015-12-29  Richard Hartmann <richih.mailinglist@gmail.com>
 
-	* Fix tests to always use C locale, this makes nook reproducible
-	* Implement `nook foreach`
-	* Implement `nook list-untracked -a`
+	* Fix tests to always use C locale, this makes fig reproducible
+	* Implement `fig foreach`
+	* Implement `fig list-untracked -a`
 	* Handle Git older than 2.x gracefully
 	* Fix broken list-tracked-by
-	* Fix regression in `nook which`
+	* Fix regression in `fig which`
 	* Skip ignored files in the output of list-untracked
 	* Improve cloning
 	* Clean up docs
-	* Implement `nook status --terse`
+	* Implement `fig status --terse`
 	* Improve tests
 
 2015-05-02  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -186,8 +186,8 @@
 	* Release 1.20150502
 	* Add tests
 	* Integrate tests with Travis CI
-	* Make `nook --list_untracked` GNU-independent
-	* Improve nook's code quality
+	* Make `fig --list_untracked` GNU-independent
+	* Improve fig's code quality
 	* Improve Makefile, documentation, etc
 
 2014-10-26  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -199,11 +199,11 @@
 2014-10-25  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.20141025
-	* `nook which dontexist` exits 1
-	* `nook status` shows commits ahead/behind remote tracking branch
+	* `fig which dontexist` exits 1
+	* `fig status` shows commits ahead/behind remote tracking branch
 	* Support overlay functions
-	* Support `nook list-untracked`, optionally recursively
-	* Support `nook list-untracked $repo`
+	* Support `fig list-untracked`, optionally recursively
+	* Support `fig list-untracked $repo`
 	* Improve error handling of clone()
 	* Rename `list-tracked-by` to `list-tracked <repo>`
 	* Support repo-specific config files
@@ -265,8 +265,8 @@
 2013-08-29  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.20130829
-	* Add support for `nook commit`
-	* Add support for `nook status <repo>`
+	* Add support for `fig commit`
+	* Add support for `fig status <repo>`
 	* Add pre-/post-init hooks
 	* Documentation improvements
 	* Minor cleanups
@@ -274,23 +274,23 @@
 2013-07-24  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.20130724
-	* Add support for `nook status`
-	* Improve output of `nook pull`
-	* Improve output of `nook push`
+	* Add support for `fig status`
+	* Improve output of `fig pull`
+	* Improve output of `fig push`
 	* Minor documentation improvements
 
 2013-07-23  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.20130723
-	* Support $NOOK_GITIGNORE == none
+	* Support $FIG_GITIGNORE == none
 	* Documentation improvements,
 	* Improved zsh completion
-	* Add support for `nook pull`
-	* Add support for `nook push`
-	* Add retire() to tear down nook ENV
-	* Add clone hooks, including one witout nook ENV to
+	* Add support for `fig pull`
+	* Add support for `fig push`
+	* Add retire() to tear down fig ENV
+	* Add clone hooks, including one witout fig ENV to
 	  allow subsequent cloning of other repos
-	* Fix `nook rename`
+	* Fix `fig rename`
 	* Improve general code robustness
 
 2013-06-14  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -305,13 +305,13 @@
 	* Ancher ignore file to root of Git repo
 	* Implemented basename() to save one process spawn
 	* Improve packaged Zsh completion
-	* Renamed `nook setup` to `nook upgrade`
+	* Renamed `fig setup` to `fig upgrade`
 	* Various documentation and spelling improvements
 
 2013-04-21  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.2
-	* Introduce `nook version`
+	* Introduce `fig version`
 
 2013-03-31  Richard Hartmann <richih.mailinglist@gmail.com>
 
@@ -329,7 +329,7 @@
 2012-06-30  Richard Hartmann <richih.mailinglist@gmail.com>
 
 	* Release 1.0
-	* Make `nook list` more resilient
+	* Make `fig list` more resilient
 	* Lots of doc improvements
 
 2012-02-27  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -339,7 +339,7 @@
 
 2012-02-15  Richard Hartmann <richih.mailinglist@gmail.com>
 
-	* Introduce `nook which`
+	* Introduce `fig which`
 	* hooks will tell you when they are being executed
 	* Formatting & resilience improvements
 	* We have a changelog, now! (yay)
@@ -360,11 +360,11 @@
 
 2011-12-26  Richard Hartmann <richih.mailinglist@gmail.com>
 
-	* Introduce and use .config/nook/config
+	* Introduce and use .config/fig/config
 	* More verbose error handling
-	* Introduce `nook {list-tracked,list-tracked-by}`
-	* Introduce repo shortcuts (`nook zsh commit`)
-	* Rename `nook seed-gitignore` to `nook write-gitignore`
+	* Introduce `fig {list-tracked,list-tracked-by}`
+	* Introduce repo shortcuts (`fig zsh commit`)
+	* Rename `fig seed-gitignore` to `fig write-gitignore`
 	* Add license information
 
 2011-11-29  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -372,8 +372,8 @@
 	* Bugfixes
 	* Refactor error handling
 	* Make code more resilient
-	* Make nook play nice with mr
-	* Introduce nook mv and setup
+	* Make fig play nice with mr
+	* Introduce fig mv and setup
 
 2011-11-23  Richard Hartmann <richih.mailinglist@gmail.com>
 
@@ -399,7 +399,7 @@
 
 	* Yet more documentation improvements
 	* Makefile
-	* Heed already-defined ENV variables within nook
+	* Heed already-defined ENV variables within fig
 	* Handle .gitignore.d/$repo automagically
 
 2011-11-11  Richard Hartmann <richih.mailinglist@gmail.com>
@@ -415,7 +415,7 @@
 
 2011-10-18  Richard Hartmann <richih.mailinglist@gmail.com>
 
-	* Fixed bug in nook clone & init
+	* Fixed bug in fig clone & init
 
 2011-10-17  Richard Hartmann <richih.mailinglist@gmail.com>
 

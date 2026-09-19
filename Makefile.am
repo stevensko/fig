@@ -9,16 +9,16 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-developer-mode
 docdir = $(datarootdir)/doc/$(TRANSFORMED_PACKAGE_NAME)
 licensedir = $(datarootdir)/licenses/$(TRANSFORMED_PACKAGE_NAME)
 
-bin_SCRIPTS = nook
+bin_SCRIPTS = fig
 dist_doc_DATA = changelog doc/INSTALL.md doc/README.md doc/error_codes.md
 samplehooksdir = $(docdir)/sample_hooks
 dist_samplehooks_DATA = doc/sample_hooks/post-init-add-origin doc/sample_hooks/post-merge-unclobber doc/sample_hooks/pre-merge-unclobber
 dist_license_DATA = LICENSE.md CONTRIBUTORS
 if ENABLE_MAN_PAGE
-dist_man_MANS = doc/nook.1
+dist_man_MANS = doc/fig.1
 endif
 
-EXTRA_DIST  = completions/nook.bash completions/nook.zsh build-aux/ax_prog_perl_modules.m4
+EXTRA_DIST  = completions/fig.bash completions/fig.zsh build-aux/ax_prog_perl_modules.m4
 EXTRA_DIST += t/000-tear-env.t t/001-setup-env.t t/100-init.t t/300-add.t t/950-delete.t t/999-tear-env.t
 
 BUILT_SOURCES =
@@ -37,16 +37,16 @@ include $(top_srcdir)/aminclude.am
 
 if !SOURCE_IS_DIST
 
-doc/nook.1: doc/nook.1.ronn
+doc/fig.1: doc/fig.1.ronn
 	$(RONN) < $< > $@
 
 endif
 
-$(COMPLETIONS_OUT_DIR)/nook: completions/nook.bash
+$(COMPLETIONS_OUT_DIR)/fig: completions/fig.bash
 	mkdir -p $(dir $@)
 	install $< $@
 
-$(COMPLETIONS_OUT_DIR)/_nook: completions/nook.zsh
+$(COMPLETIONS_OUT_DIR)/_fig: completions/fig.zsh
 	mkdir -p $(dir $@)
 	install $< $@
 

@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([nook], [m4_esyscmd(build-aux/git-version-gen .tarball-version)])
+AC_INIT([fig], [m4_esyscmd(build-aux/git-version-gen .tarball-version)])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign tar-pax dist-zstd dist-zip no-dist-gzip color-tests])
@@ -81,7 +81,7 @@ AM_COND_IF([ENABLE_TESTS], [
 ])
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([nook], [chmod +x nook])
-AC_CONFIG_FILES([doc/nook.1.ronn])
+AC_CONFIG_FILES([fig], [chmod +x fig])
+AC_CONFIG_FILES([doc/fig.1.ronn])
 
 AC_OUTPUT

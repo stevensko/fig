@@ -2,13 +2,13 @@ COMPLETIONS_OUT_DIR = completions
 
 if ENABLE_BASH_COMPLETION
 bashcompletiondir = $(BASH_COMPLETION_DIR)
-nodist_bashcompletion_DATA = $(COMPLETIONS_OUT_DIR)/nook
+nodist_bashcompletion_DATA = $(COMPLETIONS_OUT_DIR)/fig
 CLEANFILES += $(nodist_bashcompletion_DATA)
 endif
 
 if ENABLE_ZSH_COMPLETION
 zshcompletiondir = $(ZSH_COMPLETION_DIR)
-nodist_zshcompletion_DATA = $(COMPLETIONS_OUT_DIR)/_nook
+nodist_zshcompletion_DATA = $(COMPLETIONS_OUT_DIR)/_fig
 CLEANFILES += $(nodist_zshcompletion_DATA)
 endif
 

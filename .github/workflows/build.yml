@@ -37,8 +37,8 @@ jobs:
       - name: Post build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: nook-${{ env.VERSION }}
-          path: nook-${{ env.VERSION }}.zip
+          name: fig-${{ env.VERSION }}
+          path: fig-${{ env.VERSION }}.zip
 
   standalone:
     runs-on: ubuntu-latest
@@ -56,9 +56,9 @@ jobs:
           ./configure --with-standalone --bindir=/
           make DESTDIR=. install-exec
           echo VERSION=$(cat .version) >> $GITHUB_ENV
-          sha256sum nook-standalone.sh
+          sha256sum fig-standalone.sh
       - name: Post standalone script artifact
         uses: actions/upload-artifact@v4
         with:
           name: standalone-deployment-${{ env.VERSION }}
-          path: nook-standalone.sh
+          path: fig-standalone.sh

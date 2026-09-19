@@ -1,5 +1,5 @@
-nook.1
-doc/nook.1.ronn
+fig.1
+doc/fig.1.ronn
 *.patch
 *.swp
 .swp
@@ -12,11 +12,11 @@ aclocal.m4
 autom4te.cache/
 build-aux/install-sh
 build-aux/missing
-completions/_nook
-completions/nook
+completions/_fig
+completions/fig
 config.log
 config.status
 configure
 aminclude.am
-/nook
-nook-*
+/fig
+fig-*

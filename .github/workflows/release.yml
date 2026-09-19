@@ -45,9 +45,9 @@ jobs:
           prerelease: ${{ env.PRERELEASE }}
           body_path: changelog-HEAD
           files: |
-            nook-${{ env.VERSION }}.tar.zst
-            nook-${{ env.VERSION }}.zip
-            nook-${{ env.VERSION }}.sha256.txt
+            fig-${{ env.VERSION }}.tar.zst
+            fig-${{ env.VERSION }}.zip
+            fig-${{ env.VERSION }}.sha256.txt
 
   deploy-standalone:
     runs-on: ubuntu-latest
@@ -60,11 +60,11 @@ jobs:
           ./bootstrap.sh
           ./configure --with-standalone --bindir=/
           make DESTDIR=. install-exec
-          sha256sum nook-standalone.sh | tee nook-standalone.sha256.txt
+          sha256sum fig-standalone.sh | tee fig-standalone.sha256.txt
       - name: Add standalone deployment to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
           tag: ${{ github.ref }}
           file_glob: true
-          file: nook-standalone.{sh,sha256.txt}
+          file: fig-standalone.{sh,sha256.txt}

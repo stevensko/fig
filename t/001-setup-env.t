@@ -14,7 +14,7 @@ ok !$?;
 
 chdir 't/etc/' or die $!;
 
-system ("ln -s '../../nook'");
+system ("ln -s '../../fig'");
 ok !$?;
 
 $ENV{'HOME'} = abs_path ('.homerooms_home');
