@@ -717,10 +717,13 @@ run() {
 #
 # fig's fallback ignore file is a single `*`, so every deliberate `add` of a
 # path would otherwise need `-f`. This transparently supplies it -- but ONLY
-# when the catch-all `*` is the sole thing in the way. If any named pathspec
-# is matched by a more specific pattern (a hand-written rule in a per-repo
-# .gitignore, .git/info/exclude, ...) we stay out of the way and let git's
-# normal "use -f" refusal happen, so a deliberate ignore is never bypassed.
+# when the catch-all `*` is the sole thing in the way, or the path is one git
+# already tracks (re-adding a tracked path is always safe, and without this
+# git stages it anyway but also prints a confusing "ignored ... use -f"
+# refusal). If any untracked pathspec is matched by a more specific pattern
+# (a hand-written rule in a per-repo .gitignore, .git/info/exclude, ...) we
+# stay out of the way and let git's normal "use -f" refusal happen, so a
+# deliberate ignore is never bypassed.
 #
 # Also skipped for bulk forms (. -A --all -u --update -n --dry-run ...), when
 # -f/--force is already present, or when FIG_ADD_FORCE=no. $@ is the git
@@ -753,6 +756,16 @@ auto_add_force() {
 				--) ddash=1; continue ;;
 				-*) continue ;;
 			esac
+		fi
+		# Re-adding a path git already tracks is always safe -- there's no
+		# risk of accidentally starting to track something new, whatever the
+		# ignore rules say (and without this, git still stages the change
+		# but ALSO prints the scary "ignored ... use -f" refusal, because
+		# its ignore check runs on the pathspec's ancestor directories, not
+		# on tracked-status).
+		if @GIT@ ls-files --error-unmatch -- "$a" > /dev/null 2>&1; then
+			blanket=1
+			continue
 		fi
 		# `check-ignore -v` prints the last matching line even when it is a
 		# negation (path NOT ignored), so treat a leading '!' as "not ignored".
