@@ -5,7 +5,7 @@
 	* Environment variables renamed VCSH_* -> FIG_*
 	* Nothing is created under $HOME any more. Everything lives in
 	  $XDG_CONFIG_HOME/fig/:
-	    - one <repo>.fig/ directory per repo, containing:
+	    - one <repo>.config/ directory per repo, containing:
 	        <repo>.git/     the git directory
 	        .figrc       per-repo shell rc (sourced), was config.d/<repo>
 	        .gitignore      per-repo ignore file  (was ~/.gitignore.d/<repo>)
@@ -21,7 +21,7 @@
 	  unless you make a curated per-repo .gitignore (fig write-gitignore).
 	* Hook/overlay dirs lost the -enabled suffix: hooks/ and overlays/.
 	* Shell rc file renamed: ~/.config/fig/config -> ~/.config/fig/.figrc
-	  (and per-repo <repo>.fig/config -> <repo>.fig/.figrc); system
+	  (and per-repo <repo>.config/config -> <repo>.config/.figrc); system
 	  file /etc/vcsh/config -> /etc/fig/figrc
 	* Source script renamed vcsh.in -> fig.in; man page vcsh.1 -> fig.1
 	* $XDG_CONFIG_HOME/fig/.repos ("<name> <url> <branch> @tags," per repo)
@@ -60,6 +60,13 @@
 	  in one step (message defaults to "update"). Prints Adding.../
 	  Committing.../Pushing... phase labels, but only with more than one
 	  repo, same rule as the per-repo label above.
+	* Per-repo container directory suffix renamed <repo>.fig/ -> <repo>.config/
+	  (e.g. $XDG_CONFIG_HOME/fig/dotfiles.config/dotfiles.git). Purely a
+	  naming change; layout and contents (.figrc, .gitignore,
+	  .gitattributes) are otherwise unchanged.
+	* auto_add_force: also force an already-tracked path unconditionally --
+	  re-adding a modified tracked file no longer trips the "ignored ...
+	  use -f" refusal just because it lives under an ignored directory.
 	* upgrade now sets status.showUntrackedFiles (default no, override with
 	  $FIG_SHOW_UNTRACKED) so `git status` in a repo ignores $HOME
 	* delete: use `git ls-files -z | xargs -0` so paths with whitespace,

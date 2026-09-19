@@ -124,7 +124,7 @@ function _fig () {
 		"which:find <substring> in name of any tracked file"
 		"config:edit shared git config included by every repo"
 		"bootstrap:clone every repo in .repos not already present"
-		"write-gitignore:write <repo>.fig/.gitignore via git ls-files"
+		"write-gitignore:write <repo>.config/.gitignore via git ls-files"
 	)
 
 	args=(
@@ -146,7 +146,7 @@ function _fig () {
 				# There is no handler function, so this is probably the name
 				# of a repository. Act accordingly.
 				# FIXME: this may want to use '_dispatch fig git'
-				GIT_DIR=$FIG_REPO_D/$words[1].fig/$words[1].git _dispatch git git && ret=0
+				GIT_DIR=$FIG_REPO_D/$words[1].config/$words[1].git _dispatch git git && ret=0
 			else
 				curcontext="${curcontext%:*:*}:fig-${figcommand}:"
 				_call_function ret _fig-${figcommand} && (( ret ))

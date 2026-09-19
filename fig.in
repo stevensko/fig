@@ -166,7 +166,7 @@ help() {
    version              Print version information
    which <substring>    Find substring in name of any tracked file
    write-gitignore \\
-   [<repo>]             Write <repo>.fig/.gitignore via git ls-files
+   [<repo>]             Write <repo>.config/.gitignore via git ls-files
 
    <repo> <git command> Shortcut to run git commands directly
    <repo>               Shortcut to enter repository" >&2
@@ -255,7 +255,7 @@ commit() {
 		if [ "$fig_repo_count" -gt 1 ]; then
 			echo "$FIG_REPO_NAME: "
 		fi
-		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 		use
 		hook_repo pre-commit
 		@GIT@ commit --untracked-files=no --quiet "$@"
@@ -283,7 +283,7 @@ To continue, type 'Yes, do as I say'"
 	# C-quote) are handled verbatim; `--` guards against leading dashes.
 	@GIT@ ls-files -z | xargs -0 rm -f -- ||
 		info "could not delete some files, continuing with repository deletion"
-	# Remove the whole <name>.fig/ container (git dir, per-repo config,
+	# Remove the whole <name>.config/ container (git dir, per-repo config,
 	# per-repo gitignore/gitattributes).
 	rm -rf "${GIT_DIR%/*}" || error "could not delete '${GIT_DIR%/*}'"
 }
@@ -316,7 +316,7 @@ foreach() {
 	fig_repo_count=$(printf '%s\n' "$fig_repos" | @GREP@ -c .)
 	for FIG_REPO_NAME in $fig_repos; do
 		export FIG_REPO_NAME
-		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 		use
 		hook_repo pre-foreach
 		if [ -n "${FIG_PRINT_REPO_PREFIX+x}" ]; then
@@ -369,16 +369,16 @@ init() {
 }
 
 list() {
-	for repo in "$FIG_REPO_D"/*.fig; do
+	for repo in "$FIG_REPO_D"/*.config; do
 		[ -d "$repo" ] || continue
-		name=$(basename "$repo" .fig)
+		name=$(basename "$repo" .config)
 		[ -d "$repo/$name.git" ] && [ -r "$repo/$name.git" ] && echo "$name"
 	done
 }
 
 list_has_remote() {
 	for FIG_REPO_NAME in $(list); do
-		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 		# This command returns the tracking branch of the currently-checked-out local
 		# branch, if any. See https://stackoverflow.com/a/9753364
 		[ -n  "$(@GIT@ for-each-ref "$(@GIT@ symbolic-ref -q HEAD)")" ] && echo "$FIG_REPO_NAME"
@@ -417,7 +417,7 @@ repos_line() {
 	# column is unambiguous; a leading '@' or trailing ',' in $2 is absorbed.
 	# Return 1 if the repo has no origin URL.
 	local url branch tags
-	GIT_DIR=$FIG_REPO_D/$1.fig/$1.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$1.config/$1.git; export GIT_DIR
 	url=$(@GIT@ config --get remote.origin.url 2> /dev/null) || return 1
 	[ -n "$url" ] || return 1
 	branch=$(@GIT@ symbolic-ref --quiet --short HEAD 2> /dev/null) || branch=
@@ -453,7 +453,7 @@ add() {
 			;;
 		*)
 			local line tags
-			[ -d "$FIG_REPO_D/$1.fig/$1.git" ] || fatal "add: no such repository: '$1'" 12
+			[ -d "$FIG_REPO_D/$1.config/$1.git" ] || fatal "add: no such repository: '$1'" 12
 			if repos_has "$1"; then
 				info "'$1' is already in '$FIG_REPOS'"
 				return 0
@@ -528,7 +528,7 @@ bootstrap() {
 			verbose "skipping '$name': tags '${tags:-none}' do not match filter"
 			continue
 		fi
-		if [ -e "$FIG_REPO_D/$name.fig/$name.git" ]; then
+		if [ -e "$FIG_REPO_D/$name.config/$name.git" ]; then
 			info "skipping '$name': already present"
 			continue
 		fi
@@ -542,7 +542,7 @@ bootstrap() {
 }
 
 get_files() {
-	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 	@GIT@ ls-files --full-name
 }
 
@@ -598,7 +598,7 @@ list_untracked() {
 }
 
 list_untracked_helper() {
-	export GIT_DIR="$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git"
+	export GIT_DIR="$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git"
 	@GIT@ ls-files --others $exclude_standard_opt $directory_opt | (
 		while read -r line; do
 			echo "$line"
@@ -625,7 +625,7 @@ pull() {
 		if [ "$fig_repo_count" -gt 1 ]; then
 			printf '%s: ' "$FIG_REPO_NAME"
 		fi
-		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 		use
 		hook_repo pre-pull
 		@GIT@ pull
@@ -646,7 +646,7 @@ push() {
 		if [ "$fig_repo_count" -gt 1 ]; then
 			printf '%s: ' "$FIG_REPO_NAME"
 		fi
-		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+		GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 		use
 		hook_repo pre-push
 		@GIT@ push
@@ -691,7 +691,7 @@ rename() {
 	fig_dir_old=${GIT_DIR%/*}
 	fig_dir_new=${GIT_DIR_NEW%/*}
 	[ -e "$fig_dir_new" ] && fatal "'$fig_dir_new' exists" 54
-	# Move the whole <name>.fig/ container, then rename the git dir inside it.
+	# Move the whole <name>.config/ container, then rename the git dir inside it.
 	mv -f "$fig_dir_old" "$fig_dir_new" ||
 		fatal "Could not mv '$fig_dir_old' '$fig_dir_new'" 52
 	mv -f "$fig_dir_new/$FIG_REPO_NAME.git" "$GIT_DIR_NEW" ||
@@ -799,7 +799,7 @@ status() {
 #          wc -l  output and a deliberate lack of quoting for git args.
 # shellcheck disable=SC2086
 status_helper() {
-	GIT_DIR=$FIG_REPO_D/$1.fig/$1.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$1.config/$1.git; export GIT_DIR
 	FIG_GIT_OPTIONS="-c status.relativePaths=false $2"
 	use
 	# Shellcheck isn't understanding a complex block.
@@ -827,7 +827,7 @@ upgrade() {
 	elif [ ! "x$FIG_WORKTREE" = 'xrelative' ]; then
 		@GIT@ config core.worktree "$FIG_BASE"
 	fi
-	# Per-repo exclude/attributes file lives in <name>.fig/ next to the
+	# Per-repo exclude/attributes file lives in <name>.config/ next to the
 	# git dir; if absent, fall back to the shared file in $XDG_CONFIG_HOME/fig.
 	if [ ! "x$FIG_GITIGNORE" = 'xnone' ]; then
 		if [ -e "${GIT_DIR%/*}/.gitignore" ]; then
@@ -1001,7 +1001,7 @@ if [ x"$FIG_COMMAND" = x'clone' ]; then
 	[ -z "$FIG_REPO_NAME" ] && fatal "$FIG_COMMAND: could not determine repository name" 1
 	export FIG_REPO_NAME
 	[ -n "$FIG_BRANCH" ] || FIG_BRANCH=main
-	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 elif [ "$FIG_COMMAND" = 'help' ]; then
 	help && exit
 elif [ "$FIG_COMMAND" = 'version' ]; then
@@ -1025,11 +1025,11 @@ elif [ x"$FIG_COMMAND" = x'delete' ]           ||
 	else
 		FIG_REPO_NAME=$2; export FIG_REPO_NAME
 	fi
-	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 	[ x"$FIG_COMMAND" = x'rename' ] && [ -z "$3" ] && fatal "$FIG_COMMAND: please specify a target name" 1
 	[ x"$FIG_COMMAND" = x'run'    ] && [ -z "$3" ] && fatal "$FIG_COMMAND: please specify a command" 1
 	[ x"$FIG_COMMAND" = x'rename' ] && { FIG_REPO_NAME_NEW=$3; export FIG_REPO_NAME_NEW;
-	GIT_DIR_NEW=$FIG_REPO_D/$FIG_REPO_NAME_NEW.fig/$FIG_REPO_NAME_NEW.git; export GIT_DIR_NEW; }
+	GIT_DIR_NEW=$FIG_REPO_D/$FIG_REPO_NAME_NEW.config/$FIG_REPO_NAME_NEW.git; export GIT_DIR_NEW; }
 	[ x"$FIG_COMMAND" = x'run' ]    && shift 2
 elif [ x"$FIG_COMMAND" = x'foreach' ]; then
 	[ -z "$2" ] && fatal "$FIG_COMMAND: please specify a command" 1
@@ -1054,7 +1054,7 @@ elif [ x"$FIG_COMMAND" = x'status' ]; then
 elif [ -n "$2" ]; then
 	FIG_COMMAND='run'; export FIG_COMMAND
 	FIG_REPO_NAME=$1; export FIG_REPO_NAME
-	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 	[ -d "$GIT_DIR" ] || { help; exit 1; }
 	shift 1
 	if [ x"$1" = x'add' ] && auto_add_force "$@"; then
@@ -1065,7 +1065,7 @@ elif [ -n "$2" ]; then
 elif [ -n "$FIG_COMMAND" ]; then
 	FIG_COMMAND='enter'; export FIG_COMMAND
 	FIG_REPO_NAME=$1; export FIG_REPO_NAME
-	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.fig/$FIG_REPO_NAME.git; export GIT_DIR
+	GIT_DIR=$FIG_REPO_D/$FIG_REPO_NAME.config/$FIG_REPO_NAME.git; export GIT_DIR
 	[ -d "$GIT_DIR" ] || { help; exit 1; }
 else
 	# $1 is empty
@@ -1105,10 +1105,10 @@ fi
 verbose "$FIG_COMMAND begin"
 FIG_COMMAND=$(echo "$FIG_COMMAND" | @SED@ 's/-/_/g'); export FIG_COMMAND
 
-# Source repo-specific rc file, if present: <repo>.fig/.figrc
+# Source repo-specific rc file, if present: <repo>.config/.figrc
 # shellcheck source=/dev/null
-[ -r "$FIG_REPO_D/$FIG_REPO_NAME.fig/.figrc" ] \
-	&& . "$FIG_REPO_D/$FIG_REPO_NAME.fig/.figrc"
+[ -r "$FIG_REPO_D/$FIG_REPO_NAME.config/.figrc" ] \
+	&& . "$FIG_REPO_D/$FIG_REPO_NAME.config/.figrc"
 
 # source overlay functions
 for overlay in "$FIG_OVERLAY_D/$FIG_COMMAND"* "$FIG_OVERLAY_D/$FIG_REPO_NAME.$FIG_COMMAND"*; do

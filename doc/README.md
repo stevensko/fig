@@ -1,7 +1,7 @@
 conFig Files Manager - multiple Git repositories in $HOME
 
 A fork of vcsh (https://github.com/RichiH/vcsh). The command is `fig`. Everything
-lives under `~/.config/fig/` -- one `<name>.fig/` directory per repo; nothing
+lives under `~/.config/fig/` -- one `<name>.config/` directory per repo; nothing
 is created in `$HOME`.
 
 
@@ -159,7 +159,7 @@ tracked files themselves.
         .repos                  # repo list for `bootstrap` (curate with `fig add`)
         hooks/                  # optional: hook scripts
         overlays/               # optional: function overrides
-        <name>.fig/          # one directory per repo, containing:
+        <name>.config/          # one directory per repo, containing:
             <name>.git/         #   the git directory
             .figrc           #   optional: shell rc sourced when acting on this repo
             .gitignore          #   optional: per-repo ignore file
@@ -168,7 +168,7 @@ tracked files themselves.
 Each `<name>.git` is an ordinary git directory with `core.worktree` set to
 `$HOME` and `core.bare` false, so the working files land straight in `$HOME`;
 `fig` never creates symlinks. `upgrade` sets `core.excludesfile` /
-`core.attributesfile` to the per-repo file in `<name>.fig/` if it exists,
+`core.attributesfile` to the per-repo file in `<name>.config/` if it exists,
 otherwise to the shared `~/.config/fig/.gitignore` /
 `~/.config/fig/.gitattributes` (see `$FIG_GITIGNORE`). Unlike vcsh, these
 files are **not** tracked by the repo and do not clone to other machines --
@@ -178,7 +178,7 @@ The shared `~/.config/fig/.gitignore` is seeded with a single `*`, so
 `git add .` in a fig repo can't sweep up all of `$HOME`. To spare you a
 `-f` on every deliberate add, `fig <repo> add <path>` supplies `-f`
 automatically **when that catch-all `*` is the only thing in the way**. A
-path matched by a real rule (a line you wrote in `<name>.fig/.gitignore`,
+path matched by a real rule (a line you wrote in `<name>.config/.gitignore`,
 `.git/info/exclude`, ...) is **not** force-added -- git's normal "use -f"
 refusal still stands, so a deliberate ignore is never bypassed. The implicit
 `-f` is skipped for bulk forms (`fig <repo> add .` / `-A` / `-u` / `-n`

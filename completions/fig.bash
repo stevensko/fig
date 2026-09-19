@@ -137,7 +137,7 @@ _fig () {
 	# git command on repository
 	if [[ -n "${repos[$cmd]}" ]]; then
 		: "${FIG_REPO_D:=${XDG_CONFIG_HOME:-$HOME/.config}/fig}"
-		GIT_DIR="${FIG_REPO_D}/${cmd}.fig/${cmd}.git" _fig_git_command "$subcword"
+		GIT_DIR="${FIG_REPO_D}/${cmd}.config/${cmd}.git" _fig_git_command "$subcword"
 	fi
 	return 0
 }

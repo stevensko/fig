@@ -4,7 +4,7 @@ Multiplex Git Repos in $Home for Dotfiles Management
 
 [![Build Status](https://github.com/stevensko/fig/actions/workflows/build.yml/badge.svg)](https://github.com/stevensko/fig/actions/workflows/build.yml)
 
-> A fork of [vcsh](https://github.com/RichiH/vcsh). The command is `fig`; everything lives under `~/.config/fig/` — one `<name>.fig/` directory per repo (holding `<name>.git/` plus its per-repo config/ignore/attributes). Nothing is created in `$HOME`.
+> A fork of [vcsh](https://github.com/RichiH/vcsh). The command is `fig`; everything lives under `~/.config/fig/` — one `<name>.config/` directory per repo (holding `<name>.git/` plus its per-repo config/ignore/attributes). Nothing is created in `$HOME`.
 
 # Index
 

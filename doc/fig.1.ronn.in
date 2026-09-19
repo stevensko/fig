@@ -250,7 +250,7 @@ an interactive user.
   Find <substring> in name of any tracked file.
 
 * write-gitignore:
-  Write <repo>.fig/.gitignore via `git ls-files`. If <repo> is not specified
+  Write <repo>.config/.gitignore via `git ls-files`. If <repo> is not specified
   but we're within a fig repository, use that.
 
 * <repo> <gitcommand>:
@@ -272,14 +272,14 @@ ascending precedence, they are:
 * `VARIABLE=foo fig`
 * </etc/fig/figrc>
 * <$XDG_CONFIG_HOME/fig/.figrc>
-* <$FIG_REPO_D/<repo>.fig/.figrc> (only when acting on <repo>)
+* <$FIG_REPO_D/<repo>.config/.figrc> (only when acting on <repo>)
 * `fig -c <file>`
 
 Please note that those files are sourced. Any and all commands will be
 executed in the context of your shell.
 
-The per-repo file <$XDG_CONFIG_HOME/fig/<repo>.fig/.figrc> is read only
-while operating on that repository. It lives inside the <repo>.fig/
+The per-repo file <$XDG_CONFIG_HOME/fig/<repo>.config/.figrc> is read only
+while operating on that repository. It lives inside the <repo>.config/
 directory (next to <repo>.git/), which `rename` moves and `delete` removes as
 a whole.
 
@@ -295,7 +295,7 @@ Because the shared fallback ignore file is a single `*` (so `git add .` in a
 fig repo does not vacuum up all of `$HOME`), `fig <repo> add <path> ...`
 supplies `-f` for you when the catch-all `*` is the only thing ignoring the
 named paths. If any path is matched by a more specific pattern -- a
-hand-written rule in a <repo>.fig/.gitignore, `.git/info/exclude`, etc. --
+hand-written rule in a <repo>.config/.gitignore, `.git/info/exclude`, etc. --
 `fig` does not force, so git's normal "use -f" refusal still protects a
 deliberate ignore. The implicit `-f` is also skipped for bulk forms (`.`,
 `-A`, `--all`, `-u`, `--update`, `-n`, `--dry-run`, ...), when you pass
@@ -316,7 +316,7 @@ Interesting knobs you can turn:
 
 * <$FIG_GITIGNORE_FILE>, <$FIG_GITATTRIBUTES_FILE>:
   Shared fallback ignore / attributes files, used by a repo when it has no
-  <repo>.fig/.gitignore (resp. gitattributes) of its own.
+  <repo>.config/.gitignore (resp. gitattributes) of its own.
 
   Default to <$XDG_CONFIG_HOME/fig/.gitignore> and
   <$XDG_CONFIG_HOME/fig/.gitattributes>.
