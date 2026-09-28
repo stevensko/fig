@@ -73,7 +73,7 @@
 	  glob characters, or non-ASCII bytes are removed correctly
 	* Drop the myrepos (post-init-setup-mr) sample hook; bootstrapping is
 	  now built in (see the .repos / bootstrap notes above)
-	* Add install-local.sh for a no-autotools user-space install
+	* Add install.sh for a no-autotools user-space install
 
 2024-04-08  Caleb Maclennan <caleb@alerque.com>
 
