@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # This code does amost exactly what the native fig sanity checking code
 # does except that on finding a potential merge conflict, it moves existing
