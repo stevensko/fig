@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # This finds objects that the pre-merge script moved out of the way to
 # avoid conflicts when running `fig clone` and moves them back to their
