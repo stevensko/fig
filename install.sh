@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/usr/bin/sh
 # Build the standalone fig from this source tree and install it under a
 # user-writable prefix (default: ~/.local). No root, no autotools, no configure.
 #
-#   ./install-local.sh            # install to ~/.local/bin/fig
-#   ./install-local.sh ~/opt      # install to ~/opt/bin/fig
-#   PREFIX=~/.local ./install-local.sh --uninstall
+#   ./install.sh            # install to ~/.local/bin/fig
+#   ./install.sh ~/opt      # install to ~/opt/bin/fig
+#   PREFIX=~/.local ./install.sh --uninstall
 #
 set -eu
 
