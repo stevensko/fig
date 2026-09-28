@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # This adds a remote origin at $GITURL/dotfiles/$FIG_DIRECTORY which
 # is helpful for creating new dotfile repositories that you plan to
